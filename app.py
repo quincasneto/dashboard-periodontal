@@ -68,19 +68,21 @@ if st.button("Calcular e Gerar Recomendações"):
 
     st.success("📑 PDFs gerados com sucesso!")
 
-    # --- Botões de download ---
+    # --- Botões de download corrigidos ---
     st.download_button(
         label="⬇️ Baixar PDF do Paciente",
-        data=pdf_paciente,
+        data=pdf_paciente.getvalue(),  # <-- corrigido
         file_name=f"{nome}_relatorio_paciente.pdf",
         mime="application/pdf"
     )
 
     st.download_button(
         label="⬇️ Baixar PDF do Dentista",
-        data=pdf_dentista,
+        data=pdf_dentista.getvalue(),  # <-- corrigido
         file_name=f"{nome}_relatorio_dentista.pdf",
         mime="application/pdf"
     )
+
+
 
 
