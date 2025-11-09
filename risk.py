@@ -1,74 +1,90 @@
-def calcular_risco(bop, bolsas, perda_dentes, relacao_osso_idade, tabagismo, diabetes):
-    score = 0
-    interpretacao = {}
+from dataclasses import dataclass
+from typing import Dict
 
-    # BOP
-    if bop < 10:
-        interpretacao["BOP"] = "Baixo sangramento (<10%)"
-    elif bop <= 20:
-        score += 1
-        interpretacao["BOP"] = "Moderado sangramento (10-20%)"
+@dataclass
+class DomainScore:
+    level: str  # 'baixo', 'moderado', 'alto'
+    detail: str
+    valor: float  # valor numérico para radar
+
+def calcular_risco(bop_pct, ppd5, tooth_loss, bone_age_ratio, smoking_input, diabetes_input):
+    # --- BOP ---
+    if bop_pct < 10:
+        bop_level = "baixo"
+    elif bop_pct <= 25:
+        bop_level = "moderado"
     else:
-        score += 2
-        interpretacao["BOP"] = "Alto sangramento (>20%)"
+        bop_level = "alto"
 
-    # Bolsas
-    if bolsas == 0:
-        interpretacao["Bolsas"] = "Nenhuma bolsa profunda"
-    elif bolsas <= 3:
-        score += 1
-        interpretacao["Bolsas"] = "Algumas bolsas (1-3)"
+    # --- Bolsas ≥5mm ---
+    if ppd5 == 0:
+        ppd5_level = "baixo"
+    elif ppd5 <= 4:
+        ppd5_level = "moderado"
     else:
-        score += 2
-        interpretacao["Bolsas"] = "Muitas bolsas (≥4)"
+        ppd5_level = "alto"
 
-    # Perda de dentes
-    if perda_dentes == 0:
-        interpretacao["Perda de dentes"] = "Nenhuma perda"
-    elif perda_dentes <= 4:
-        score += 1
-        interpretacao["Perda de dentes"] = "Perda moderada (1-4)"
+    # --- Perda dentária ---
+    if tooth_loss <= 4:
+        tl_level = "baixo"
+    elif tooth_loss <= 8:
+        tl_level = "moderado"
     else:
-        score += 2
-        interpretacao["Perda de dentes"] = "Perda grave (≥5)"
+        tl_level = "alto"
 
-    # Relação perda óssea / idade
-    if relacao_osso_idade < 0.25:
-        interpretacao["Perda óssea/idade"] = "Compatível com idade (<0.25)"
-    elif relacao_osso_idade <= 1.0:
-        score += 1
-        interpretacao["Perda óssea/idade"] = "Moderada (0.25–1.0)"
+    # --- Razão perda óssea/idade ---
+    if bone_age_ratio < 0.5:
+        bar_level = "baixo"
+    elif bone_age_ratio <= 1.0:
+        bar_level = "moderado"
     else:
-        score += 2
-        interpretacao["Perda óssea/idade"] = "Grave (>1.0)"
+        bar_level = "alto"
 
-    # Tabagismo
-    if tabagismo == "Não fumante":
-        interpretacao["Tabagismo"] = "Não fumante"
-    elif tabagismo == "Fumante leve":
-        score += 1
-        interpretacao["Tabagismo"] = "Fumante leve (<10 cigarros/dia)"
+    # --- Tabagismo ---
+    if smoking_input.lower() == "não fumante":
+        smoking_level = "baixo"
+        smoking_val = 0
+    elif "leve" in smoking_input.lower():
+        smoking_level = "moderado"
+        smoking_val = 0.5
     else:
-        score += 2
-        interpretacao["Tabagismo"] = "Fumante pesado (≥10 cigarros/dia)"
+        smoking_level = "alto"
+        smoking_val = 1
 
-    # Diabetes
-    if diabetes == "Não":
-        interpretacao["Diabetes"] = "Sem diabetes"
-    elif diabetes == "Controlado":
-        score += 1
-        interpretacao["Diabetes"] = "Diabetes controlado"
+    # --- Diabetes ---
+    if diabetes_input.lower() == "não":
+        diabetes_level = "baixo"
+        diabetes_val = 0
+    elif diabetes_input.lower() == "controlado":
+        diabetes_level = "moderado"
+        diabetes_val = 0.5
     else:
-        score += 2
-        interpretacao["Diabetes"] = "Diabetes descontrolado"
+        diabetes_level = "alto"
+        diabetes_val = 1
 
-    # Classificação final
-    if score <= 3:
-        resultado = "Baixo risco"
-    elif score <= 6:
-        resultado = "Risco moderado"
+    # --- Monta dicionário de domínios ---
+    interpretacao = {
+        "bop": DomainScore(bop_level, f"BOP {bop_pct:.1f}%", bop_pct),
+        "ppd5": DomainScore(ppd5_level, f"Sítios ≥5 mm: {ppd5}", ppd5),
+        "tooth_loss": DomainScore(tl_level, f"Perda dentária: {tooth_loss}", tooth_loss),
+        "bone_age": DomainScore(bar_level, f"Razão perda óssea/idade: {bone_age_ratio:.2f}", bone_age_ratio),
+        "smoking": DomainScore(smoking_level, f"Tabagismo: {smoking_input}", smoking_val),
+        "diabetes": DomainScore(diabetes_level, f"Diabetes: {diabetes_input}", diabetes_val)
+    }
+
+    # --- Score global heurístico ---
+    highs = sum(1 for d in interpretacao.values() if d.level == "alto")
+    moderates = sum(1 for d in interpretacao.values() if d.level == "moderado")
+
+    if highs >= 2 or (highs == 1 and moderates >= 2):
+        resultado = "Alto"
+    elif moderates >= 2 and highs == 0:
+        resultado = "Moderado"
     else:
-        resultado = "Alto risco"
+        resultado = "Baixo"
 
+    score = highs * 2 + moderates  # score simples
     return resultado, score, interpretacao
+
+
 
