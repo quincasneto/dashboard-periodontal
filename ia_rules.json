@@ -1,0 +1,65 @@
+{
+  "followup": {
+    "low": "Retorno em 6 meses (ou conforme manutenção periodontal).",
+    "moderate": "Retorno em 3-4 meses; reavaliar sangramento e bolsas.",
+    "high": "Retorno em 6-8 semanas; terapia periodontal ativa e reforço de higiene."
+  },
+  "bop": {
+    "moderate": [
+      "Treinar técnica de escovação (Bass modificada) com escova macia.",
+      "Introduzir escova interdental adequada ao espaço."
+    ],
+    "high": [
+      "Reforçar controle mecânico + químico (ex.: CHX 0.12% por 7–14 dias).",
+      "Avaliar causas locais (cálculo subgengival; fatores retentivos)."
+    ]
+  },
+  "pockets": {
+    "moderate": [
+      "Raspagem e alisamento supragengival, reavaliar em 4–6 semanas."
+    ],
+    "high": [
+      "Terapia periodontal não cirúrgica por sextantes; reavaliação e considerar cirurgia."
+    ]
+  },
+  "bone_age_ratio": {
+    "moderate": [
+      "Planejamento de suporte com foco em controle de risco e monitoramento radiográfico."
+    ],
+    "high": [
+      "Discussão prognóstica por unidade dental; considerar splinting/extrações estratégicas."
+    ]
+  },
+  "smoking": {
+    "light": [
+      "Aconselhamento breve para cessação; reduzir gatilhos."
+    ],
+    "heavy": [
+      "Encaminhamento para programa de cessação tabágica; reforço motivacional."
+    ]
+  },
+  "diabetes": {
+    "controlled": [
+      "Manter controle glicêmico; checar HbA1c periódico."
+    ],
+    "uncontrolled": [
+      "Coordenar com médico para controle glicêmico; adiar procedimentos invasivos eletivos."
+    ]
+  },
+  "patient_tips": {
+    "generic": [
+      "Escovar 3x/dia por 2 minutos; fio dental diário.",
+      "Escova macia e pressão leve; evite trauma.",
+      "Trocar cabeças da escova a cada 3 meses."
+    ],
+    "chlorhexidine": [
+      "Use CHX 0.12% por 7–14 dias (não usar por períodos longos sem orientação)."
+    ],
+    "electric_brush": [
+      "Escova elétrica pode ajudar na remoção de placa se houver destreza limitada."
+    ],
+    "interdental": [
+      "Use escovas interdentais do tamanho adequado; peça calibração ao dentista."
+    ]
+  }
+}
